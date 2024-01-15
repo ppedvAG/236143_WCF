@@ -1,0 +1,18 @@
+﻿<Window x:Class="SelfHosting.Client_WpfFramework.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SelfHosting.Client_WpfFramework"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <DockPanel>
+        <WrapPanel DockPanel.Dock="Top">
+            <Button Click="Laden">Laden</Button>
+            <Slider x:Name="sl1" Minimum="1" Maximum="10" Width="100"/>
+            <TextBlock Text="{Binding ElementName=sl1,Path=Value}"/>
+            <Button Click="Bestellen">Bestellen</Button>
+        </WrapPanel>
+        <DataGrid x:Name="grid"/>
+    </DockPanel>
+</Window>
