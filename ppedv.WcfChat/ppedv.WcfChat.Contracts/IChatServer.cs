@@ -4,13 +4,13 @@ using System.ServiceModel;
 
 namespace ppedv.WcfChat.Contracts
 {
-    [ServiceContract(Namespace = "http://ppedv.de/WcfKurs/2024/WcfChat)", CallbackContract = typeof(IChatClient), SessionMode = SessionMode.Required)]
+    [ServiceContract(Namespace = "http://ppedv.de/WcfKurs/2024/WcfChat)", CallbackContract = typeof(IChatClient))]
     public interface IChatServer
     {
-        [OperationContract(IsOneWay = true, IsInitiating = true)]
+        [OperationContract(IsOneWay = true)]
         void Login(string username);
 
-        [OperationContract(IsOneWay = true, IsTerminating = true)]
+        [OperationContract(IsOneWay = true)]
         void Logout();
 
         [OperationContract(IsOneWay = true)]

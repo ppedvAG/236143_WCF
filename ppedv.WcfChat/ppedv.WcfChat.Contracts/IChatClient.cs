@@ -11,7 +11,7 @@ namespace ppedv.WcfChat.Contracts
         void LoginResponse(bool ok, string msg);
 
         [OperationContract(IsOneWay = true)]
-        void ShowUserlist(IEnumerator<string> users);
+        void ShowUserlist(IEnumerable<string> users);
 
         [OperationContract(IsOneWay = true)]
         void ShowText(string msg);
