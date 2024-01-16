@@ -16,7 +16,8 @@ namespace SelfHosting.Client_WpfFramework
         {
             InitializeComponent();
 
-            channelFactory = new ChannelFactory<IPizzaService>(new NetTcpBinding(), new EndpointAddress("net.tcp://localhost:1"));
+            channelFactory = new ChannelFactory<IPizzaService>(new NetTcpBinding(),
+                new EndpointAddress("net.tcp://localhost:1"));
         }
 
         private void Laden(object sender, RoutedEventArgs e)

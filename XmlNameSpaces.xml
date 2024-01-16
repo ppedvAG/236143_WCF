@@ -1,0 +1,25 @@
+<Bänke
+    xmlns:sitz="http://ppedv.de/ns/2024/01/Sitzbank"
+>
+
+    <Bank xmlns="http://ppedv.de/ns/2024/01/Geldbank">
+        <BLZ>12345</BLZ>
+        <Ort>Heidelberg</Ort>
+    </Bank>
+
+    <Bank xmlns="http://ppedv.de/ns/2024/01/Sitzbank">
+        <Sitzplätze>4</Sitzplätze>
+        <Ort>Park</Ort>
+    </Bank>
+
+    <Bank xmlns="http://ppedv.de/ns/2024/01/Sitzbank">
+        <Sitzplätze>4</Sitzplätze>
+        <Ort>Park</Ort>
+    </Bank>
+
+    <sitz:Bank>
+        <Sitzplätze>4</Sitzplätze>
+        <Ort>Park</Ort>
+    </sitz:Bank>
+
+</Bänke>

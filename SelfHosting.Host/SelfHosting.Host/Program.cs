@@ -15,18 +15,22 @@ namespace SelfHosting.Host
 
             var host = new ServiceHost(typeof(PizzaService));
 
+
             var netTcp = new NetTcpBinding();
-            netTcp.ReliableSession.Enabled= true;   
-            netTcp.ReliableSession.Ordered= true;
+            //netTcp.ReliableSession.Enabled = true;
+            //netTcp.ReliableSession.Ordered = true;
+
 
             host.AddServiceEndpoint(typeof(IPizzaService), netTcp, "net.tcp://localhost:1");
+
+            var basic = new BasicHttpBinding();
             host.AddServiceEndpoint(typeof(IPizzaService), new BasicHttpBinding(), "http://localhost:2");
 
-            var ws = new WSHttpBinding();
-            ws.ReliableSession.Enabled= true;
-            ws.ReliableSession.Ordered= true;
-            ws.Security.Mode = SecurityMode.None;
-            host.AddServiceEndpoint(typeof(IPizzaService), ws, "http://localhost:3");
+            //var ws = new WSHttpBinding();
+            //ws.ReliableSession.Enabled = true;
+            //ws.ReliableSession.Ordered = true;
+            //ws.Security.Mode = SecurityMode.None;
+            //host.AddServiceEndpoint(typeof(IPizzaService), ws, "http://localhost:3");
             host.AddServiceEndpoint(typeof(IPizzaService), new NetNamedPipeBinding(), "net.pipe://pizza/");
 
             var smb = new ServiceMetadataBehavior() { HttpGetEnabled = true, HttpGetUrl = new Uri("http://localhost:2/mex") };
@@ -44,7 +48,7 @@ namespace SelfHosting.Host
     }
 
 
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
+    [ServiceBehavior(IncludeExceptionDetailInFaults = true, AutomaticSessionShutdown = false)]
     public class PizzaService : IPizzaService
     {
 
@@ -57,9 +61,13 @@ namespace SelfHosting.Host
 
         public IEnumerable<Pizza> GetAllPizzas()
         {
-            yield return new Pizza { Id = 1, Name = "Käse", Price = 7.9m };
-            yield return new Pizza { Id = 2, Name = "Salami", Price = 8.5m };
-            yield return new Pizza { Id = 3, Name = "Schinken", Price = 9.2m };
+            //throw new FaultException("Schade");
+
+            throw new FaultException<OutOfPizzaError>(new OutOfPizzaError() { Msg = ":-(", WerIstSchuld = "Fred" }, new FaultReason("AAAA"));
+
+            //yield return new Pizza { Id = 1, Name = "Käse", Price = 7.9m };
+            //yield return new Pizza { Id = 2, Name = "Salami", Price = 8.5m };
+            //yield return new Pizza { Id = 3, Name = "Schinken", Price = 9.2m };
         }
 
         public void OrderPizza(int amount, Pizza pizza)

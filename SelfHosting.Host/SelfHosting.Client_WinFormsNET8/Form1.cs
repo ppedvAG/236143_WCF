@@ -17,30 +17,48 @@ namespace SelfHosting.Client_WinFormsNET8
             //channelFactory = new ChannelFactory<IPizzaService>(netTcp, new EndpointAddress("net.tcp://localhost:1"));
 
 
-            //var httBasic = new BasicHttpBinding();
-            //channelFactory = new ChannelFactory<IPizzaService>(new BasicHttpBinding(), new EndpointAddress("http://localhost:2"));
+            var httBasic = new BasicHttpBinding();
+            channelFactory = new ChannelFactory<IPizzaService>(new BasicHttpBinding(), new EndpointAddress("http://localhost:2"));
 
-            var ws = new WSHttpBinding();
-            ws.Security.Mode = SecurityMode.None;
-            ws.ReliableSession.Enabled = true;
-            ws.ReliableSession.Ordered = true;
-            channelFactory = new ChannelFactory<IPizzaService>(ws, new EndpointAddress("http://localhost:3"));
+            //var ws = new WSHttpBinding();
+            //ws.Security.Mode = SecurityMode.None;
+            //ws.ReliableSession.Enabled = true;
+            //ws.ReliableSession.Ordered = true;
+            //channelFactory = new ChannelFactory<IPizzaService>(ws, new EndpointAddress("http://localhost:3"));
         }
 
         private void loadbutton_Click(object sender, EventArgs e)
         {
-            var client = channelFactory.CreateChannel(new EndpointAddress("http://localhost:3"));
-            dataGridView1.DataSource = client.GetAllPizzas();
+            try
+            {
+                var client = channelFactory.CreateChannel(new EndpointAddress("http://localhost:2"));
+                dataGridView1.DataSource = client.GetAllPizzas();
+            }
+            catch (FaultException<OutOfPizzaError> ex)
+            {
+                MessageBox.Show($"Keine Pizza mehr {ex.Detail.WerIstSchuld} hat alle gegessen");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
 
         private void orderbutton_Click(object sender, EventArgs e)
         {
             if (dataGridView1.CurrentRow.DataBoundItem is Pizza p)
             {
-                var client = channelFactory.CreateChannel();
-                client.OrderPizza((int)numericUpDown1.Value, p);
-                var result = "VOID";
-                MessageBox.Show($"Kosten {result}");
+                try
+                {
+                    var client = channelFactory.CreateChannel();
+                    client.OrderPizza((int)numericUpDown1.Value, p);
+                    var result = "VOID";
+                    MessageBox.Show($"Kosten {result}");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
             }
         }
 
@@ -54,7 +72,7 @@ namespace SelfHosting.Client_WinFormsNET8
                 var count = i;
                 //Task.Run(() =>
                 //{
-                    client.OrderPizza(count, pizza);
+                client.OrderPizza(count, pizza);
                 //});
             }
 
