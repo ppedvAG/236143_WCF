@@ -33,6 +33,7 @@
             numericUpDown1 = new NumericUpDown();
             orderbutton = new Button();
             dataGridView1 = new DataGridView();
+            massOrderButton = new Button();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)numericUpDown1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
@@ -45,6 +46,7 @@
             flowLayoutPanel1.Controls.Add(loadbutton);
             flowLayoutPanel1.Controls.Add(numericUpDown1);
             flowLayoutPanel1.Controls.Add(orderbutton);
+            flowLayoutPanel1.Controls.Add(massOrderButton);
             flowLayoutPanel1.Dock = DockStyle.Top;
             flowLayoutPanel1.Location = new Point(0, 0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
@@ -92,6 +94,18 @@
             dataGridView1.Size = new Size(1925, 724);
             dataGridView1.TabIndex = 1;
             // 
+            // massOrderButton
+            // 
+            massOrderButton.AutoSize = true;
+            massOrderButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            massOrderButton.Location = new Point(422, 3);
+            massOrderButton.Name = "massOrderButton";
+            massOrderButton.Size = new Size(202, 42);
+            massOrderButton.TabIndex = 0;
+            massOrderButton.Text = "Massenbestellen";
+            massOrderButton.UseVisualStyleBackColor = true;
+            massOrderButton.Click += massOrderButton_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(13F, 32F);
@@ -116,5 +130,6 @@
         private NumericUpDown numericUpDown1;
         private Button orderbutton;
         private DataGridView dataGridView1;
+        private Button massOrderButton;
     }
 }

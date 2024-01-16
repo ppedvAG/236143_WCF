@@ -30,9 +30,9 @@ namespace SelfHosting.Client_WpfFramework
             if (grid.SelectedItem is Pizza p)
             {
                 var client = channelFactory.CreateChannel();
-                var result = client.OrderPizza((int)sl1.Value, p);
+                //var result = client.OrderPizza((int)sl1.Value, p);
 
-                MessageBox.Show($"Kosten {result:c}");
+                //MessageBox.Show($"Kosten {result:c}");
             }
         }
     }

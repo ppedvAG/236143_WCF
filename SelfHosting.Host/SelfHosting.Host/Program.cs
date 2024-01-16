@@ -14,9 +14,19 @@ namespace SelfHosting.Host
             Console.WriteLine("*** WCF HOST ***");
 
             var host = new ServiceHost(typeof(PizzaService));
-            host.AddServiceEndpoint(typeof(IPizzaService), new NetTcpBinding(), "net.tcp://localhost:1");
+
+            var netTcp = new NetTcpBinding();
+            netTcp.ReliableSession.Enabled= true;   
+            netTcp.ReliableSession.Ordered= true;
+
+            host.AddServiceEndpoint(typeof(IPizzaService), netTcp, "net.tcp://localhost:1");
             host.AddServiceEndpoint(typeof(IPizzaService), new BasicHttpBinding(), "http://localhost:2");
-            host.AddServiceEndpoint(typeof(IPizzaService), new WSHttpBinding(), "http://localhost:3");
+
+            var ws = new WSHttpBinding();
+            ws.ReliableSession.Enabled= true;
+            ws.ReliableSession.Ordered= true;
+            ws.Security.Mode = SecurityMode.None;
+            host.AddServiceEndpoint(typeof(IPizzaService), ws, "http://localhost:3");
             host.AddServiceEndpoint(typeof(IPizzaService), new NetNamedPipeBinding(), "net.pipe://pizza/");
 
             var smb = new ServiceMetadataBehavior() { HttpGetEnabled = true, HttpGetUrl = new Uri("http://localhost:2/mex") };
@@ -34,8 +44,17 @@ namespace SelfHosting.Host
     }
 
 
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public class PizzaService : IPizzaService
     {
+
+        static int count = 0;
+
+        public PizzaService()
+        {
+            Console.WriteLine($"New PizzaService Instance: {count++}");
+        }
+
         public IEnumerable<Pizza> GetAllPizzas()
         {
             yield return new Pizza { Id = 1, Name = "Käse", Price = 7.9m };
@@ -43,10 +62,10 @@ namespace SelfHosting.Host
             yield return new Pizza { Id = 3, Name = "Schinken", Price = 9.2m };
         }
 
-        public decimal OrderPizza(int amount, Pizza pizza)
+        public void OrderPizza(int amount, Pizza pizza)
         {
-            Console.WriteLine($"OrderPizza Thread#{Thread.CurrentThread.ManagedThreadId}");
-            return pizza.Price * amount;
+            Console.WriteLine($"OrderPizza {amount} Thread#{Thread.CurrentThread.ManagedThreadId}");
+            //return pizza.Price * amount;
         }
     }
 }
