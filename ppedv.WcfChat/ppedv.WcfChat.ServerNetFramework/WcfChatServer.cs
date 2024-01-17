@@ -5,12 +5,18 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.ServiceModel;
+using System.Threading;
 
 namespace ppedv.WcfChat.ServerNetFramework
 {
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Reentrant)]
     class WcfChatServer : IChatServer
     {
+
+        public WcfChatServer()
+        {
+            Log("NEUE SERVER INSTANZ");
+        }
         void Log(string msg, [CallerMemberName] string caller = "")
         {
             Console.WriteLine($"{DateTime.Now:G} [{caller}] {msg}");
@@ -27,7 +33,7 @@ namespace ppedv.WcfChat.ServerNetFramework
             ICommunicationObject com = (ICommunicationObject)client;
 
             com.Faulted += Com_Faulted;
-           
+
             if (clients.ContainsKey(username))
             {
                 client.LoginResponse(false, $"{username} ist bereits angemeldet!");
@@ -46,10 +52,13 @@ namespace ppedv.WcfChat.ServerNetFramework
             Log("FAULT");
         }
 
-        private void SendtoAllClient(Action<IChatClient> clientAction)
+        private void SendtoAllClient(Action<IChatClient> clientAction, IChatClient sender = null)
         {
             foreach (var client in clients.ToList())
             {
+                //if (client.Value == sender)
+                //    continue;
+
                 try
                 {
                     clientAction.Invoke(client.Value);
@@ -85,7 +94,7 @@ namespace ppedv.WcfChat.ServerNetFramework
 
             var ms = new MemoryStream();
             stream.CopyTo(ms);
-            
+
             SendtoAllClient(x =>
             {
                 ms.Position = 0;
@@ -99,7 +108,24 @@ namespace ppedv.WcfChat.ServerNetFramework
             var client = OperationContext.Current.GetCallbackChannel<IChatClient>();
             var sender = clients.FirstOrDefault(x => x.Value == client);
 
-            SendtoAllClient(x => x.ShowText($"{DateTime.Now:t} [{sender.Key}]: {text}"));
+            SendtoAllClient(x => x.ShowText($"{DateTime.Now:t} [{sender.Key}]: T:[{Thread.CurrentThread.ManagedThreadId}]  {text}"),sender.Value);
+        }
+
+        public void StartMultiSend()
+        {
+            for (int i = 0; i < 10000; i++)
+            {
+                SendtoAllClient(x => x.ShowText($"{DateTime.Now:u} {i} T:[{Thread.CurrentThread.ManagedThreadId}] {RandomString()}"));
+            }
+        }
+
+        public static string RandomString()
+        {
+            var random = new Random();
+            var length = random.Next(100, 10000);
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

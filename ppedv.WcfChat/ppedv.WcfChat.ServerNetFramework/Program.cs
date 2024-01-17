@@ -13,10 +13,10 @@ namespace ppedv.WcfChat.ServerNetFramework
 
             var tcp = new NetTcpBinding();
             tcp.Security.Mode = SecurityMode.None;
-            tcp.MaxReceivedMessageSize = int.MaxValue;
-            tcp.TransferMode = TransferMode.Buffered;
-            //tcp.ReliableSession.Enabled = true;
-
+            //tcp.MaxReceivedMessageSize = int.MaxValue;
+            //tcp.TransferMode = TransferMode.Buffered;
+            tcp.ReliableSession.Enabled = true;
+            tcp.ReliableSession.Ordered = true;
 
             var host = new ServiceHost(typeof(WcfChatServer));
 

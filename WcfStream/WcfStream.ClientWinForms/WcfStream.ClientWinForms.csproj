@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <!--<TargetFramework>net8.0-windows</TargetFramework>-->
+    <TargetFramework>net48</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+    <UseWindowsForms>true</UseWindowsForms>
+    <!--<ImplicitUsings>enable</ImplicitUsings>-->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--<PackageReference Include="System.ServiceModel.NetTcp" Version="8.0.0" />-->
+    <!--<PackageReference Include="System.ServiceModel.Primitives" Version="8.0.0" />-->
+	  <PackageReference Include="System.ServiceModel.Primitives" Version="4.10.3" />
+
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WcfStream.Contracts\WcfStream.Contracts.csproj" />
+  </ItemGroup>
+
+</Project>

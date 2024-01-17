@@ -6,11 +6,13 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
+
 namespace ppedv.WcfChat.WPFClient
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
+    //[ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Single)]
     public partial class MainWindow : Window, IChatClient
     {
         IChatServer server;
@@ -25,9 +27,11 @@ namespace ppedv.WcfChat.WPFClient
         {
             var tcp = new NetTcpBinding();
             tcp.Security.Mode = SecurityMode.None;
-            tcp.MaxReceivedMessageSize = int.MaxValue;
+            //tcp.MaxReceivedMessageSize = int.MaxValue;
 
-            //tcp.ReliableSession.Enabled = true;
+
+            tcp.ReliableSession.Enabled = true;
+            tcp.ReliableSession.Ordered = true;
             var tcpAdr = "net.tcp://172.22.197.201:1";
 
 
@@ -80,6 +84,8 @@ namespace ppedv.WcfChat.WPFClient
 
         public void ShowText(string msg)
         {
+
+            //chatLb.Dispatcher.Invoke(() => { chatLb.Items.Add(msg); });
             chatLb.Items.Add(msg);
         }
 
@@ -96,6 +102,28 @@ namespace ppedv.WcfChat.WPFClient
             img.EndInit();
 
             chatLb.Items.Add(img);
+        }
+
+        private void mutiSend(object sender, RoutedEventArgs e)
+        {
+            server?.StartMultiSend();
+        }
+
+        private void mutiText(object sender, RoutedEventArgs e)
+        {
+            for (int i = 0; i < 1000; i++)
+            {
+                server.SendText($"{i} {RandomString()}");
+            }
+        }
+
+        public static string RandomString()
+        {
+            var random = new Random();
+            var length = random.Next(100, 100);
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+              .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

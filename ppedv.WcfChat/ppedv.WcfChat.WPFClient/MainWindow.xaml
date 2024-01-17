@@ -13,10 +13,14 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
             <TextBox Name="msgTb" Margin="4"/>
-            <Button Grid.Column="1" Name="sendBtn" Click="SendText">Senden</Button>
+            <Button Grid.Column="1" Name="sendBtn" Click="SendText" Margin="0,1,0,-1">Senden</Button>
             <Button Grid.Column="2" Name="sendImageBtn" Click="SendImage">Bild...</Button>
+            <Button Grid.Column="3" Name="multisend" Click="mutiSend">Multisend</Button>
+            <Button Grid.Column="4"  Click="mutiText">MultiText</Button>
         </Grid>
 
         <ListBox Name="usersLb" DockPanel.Dock="Right" Width="160" Background="HotPink"></ListBox>
